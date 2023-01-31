@@ -1,138 +1,136 @@
 #ifndef RANDOM_ACCESS_ITERATOR_HPP
 #define RANDOM_ACCESS_ITERATOR_HPP
-// #include <iterator>
 #include <iostream>
 namespace ft
 {
-    template <class T>
+    template <typename T>
     class iterator
     {
         public :
-            typedef T value_type;
-            typedef std::ptrdiff_t difference_type;
-            typedef T* pointer;
-            typedef T& reference;
-            typedef std::random_access_iterator_tag iterator_category;
 
-        private:
-            pointer _ptr;
+            typedef T value_type; //type of the value
+            typedef std::ptrdiff_t difference_type; //difference between two iterators(distance)
+            typedef T* pointer; //pointer to the value_type
+            typedef T& reference; //reference to the value_type
+            typedef std::random_access_iterator_tag iterator_category;//type of iterator
 
         public :
         /*
             ======================= Canonical Form =============================
         */
-            iterator():_ptr(NULL)
+            iterator():_ptr(NULL){}
+            iterator(pointer ptr):_ptr(ptr){}//done
+            iterator(const iterator& other):_ptr(other._ptr) {}
+            template <class U>
+            iterator& operator=(const iterator<U>& other)
             {
-                std::cout << "iterator constructor" << std::endl;
-            }
-            iterator(pointer ptr):_ptr(ptr)//done
-            {
-                std::cout << "iterator constructor(args)" << std::endl;
-            }
-            iterator(const iterator& other):_ptr(other._ptr)
-            {
-                std::cout << "iterator copy constructor" << std::endl;
-            }
-            iterator& operator=(const iterator& other)
-            {
-                std::cout << "iterator assignation operator" << std::endl;
-                this->_ptr = other._ptr;//get the pointer of the other iterator
+                this->_base = other._base;
                 return (*this);
             }
-            ~iterator()
-            {
-                std::cout << "iterator destructor" << std::endl;
-            }
-            pointer getptr() const
+            ~iterator() {}
+        /* 
+            ==============================getter and setter ===================================
+        */
+            pointer base() const
             {
                 return (this->_ptr);
             }
-            /*
-                =============================jsp====================================
-            */
-            bool operator==(const iterator& other) const//done
+        /*
+            ============================== comparision ===================================
+        */
+            //TODO: template bcz we need to check if the other iterator is of the same type
+            template <class U>
+            bool operator==(const iterator<U> &other) const
             {
                 std::cout << "iterator == operator" << std::endl;
-                return (this->_ptr == other._ptr);
+                return (this->_ptr == other.base());
             }
-            bool operator!=(const iterator& other) const//done
+        
+            template <class U>
+            bool operator!=(const iterator<U> & other) const
             {
                 std::cout << "iterator != operator" << std::endl;
-                return (this->_ptr != other._ptr);
+                return (this->_ptr != other.base());
             }
-            /*
-                ==============================jsp===================================
-            */
-            bool operator<(const iterator& other) const //done
+
+            template <class U>
+            bool operator<(const iterator<U> & other) const
             {
                 std::cout << "iterator < operator" << std::endl;
-                return (this->_ptr < other._ptr);
+                return (this->_ptr < other.base());
             }
-            bool operator>(const iterator& other) const //done
+
+            template <class U>
+            bool operator>(const iterator<U> & other) const
             {
                 std::cout << "iterator > operator" << std::endl;
-                return (this->_ptr > other._ptr);
+                return (this->_ptr > other.base());
             }
-            bool operator<=(const iterator& other) const //done
+
+            template <class U>
+            bool operator<=(const iterator<U> & other) const
             {
                 std::cout << "iterator <= operator" << std::endl;
-                return (this->_ptr <= other._ptr);
+                return (this->_ptr <= other.base());
             }
-            bool operator>=(const iterator& other) const //done
+
+            template <class U>
+            bool operator>=(const iterator<U> & other) const
             {
                 std::cout << "iterator >= operator" << std::endl;
-                return (this->_ptr >= other._ptr);
+                return (this->_ptr >= other.base());
             }
-            /*
-                =================================================================
-            */
-            iterator& operator++() //done
+        /*
+            ============================= Arithmitics ====================================
+        */
+            iterator& operator++()
             {
                 std::cout << "iterator ++ operator" << std::endl;
                 this->_ptr++;
                 return (*this);
             }
-            iterator operator++(int) //done
+
+            iterator operator++(int)
             {  
                 std::cout << "iterator ++(int) operator" << std::endl;
                 iterator tmp(*this);
                 this->_ptr++;
                 return (tmp);
             }
-            iterator& operator--() //done
+
+            iterator& operator--()
             {
                 std::cout << "iterator -- operator" << std::endl;
                 this->_ptr--;
                 return (*this);
             }
-            iterator operator--(int) //done
+
+            iterator operator--(int)
             {
                 std::cout << "iterator --(int) operator" << std::endl;
                 iterator tmp(*this);
                 this->_ptr--;
                 return (tmp);
             }
-            /*
-                =================================================================
-            */
-            iterator operator+(difference_type n) const //done
+           
+            iterator operator+(difference_type n) const
             {
                 std::cout << "iterator + operator" << std::endl;
                 return (iterator(this->_ptr + n));
             }
-            iterator operator-(difference_type n) const //done
+
+            iterator operator-(difference_type n) const
             {
                 std::cout << "iterator - operator" << std::endl;
                 return (iterator(this->_ptr - n));
             }
-            difference_type operator-(const iterator &other) const //done
+
+            difference_type operator-(const iterator &other) const
             {
                 std::cout << " - operator" << std::endl;
-                return (iterator(this->_ptr - other.getptr()));
+                return (iterator(this->_ptr - other.base()));
             }
-            /*
-                =================================================================
-            */
+           // TODO:difference_type or int !
             iterator& operator+=(difference_type n)//done += operator to increment an iterator
             {
                 std::cout << "iterator += operator" << std::endl;
@@ -156,11 +154,13 @@ namespace ft
                 std::cout << "iterator * operator" << std::endl;
                 return (*this->_ptr);
             }
+
             reference operator[](difference_type n) const
             {
                 std::cout << "iterator [] operator" << std::endl;
                 return (*(this->_ptr + n));
             }
+
             pointer operator->() const // is used to access a member variable "m" of an object "a"
             {
                 /*
@@ -169,31 +169,12 @@ namespace ft
                 std::cout << "iterator -> operator" << std::endl;
                 return (this->_ptr);
             }
-            // pointer operator *--() const // not sure
-            // {
-            //     std::cout << "iterator *-- operator" << std::endl;
-            //     return (--this->_ptr);
-            // }
-            // pointer operator *++() const//not sure 
-            // {
-            //     std::cout << "iterator *++ operator" << std::endl;
-            //     return (++this->_ptr);
-            // }
-            // pointer operator +(difference_type n) const // not sure
-            // {
-            //     std::cout << "iterator + operator" << std::endl;
-            //     return (this->_ptr + n);
-            // }
-            // void operator =(difference_type n) const
-            // {
-            //     std::cout << "iterator = operator" << std::endl;
-            //     this->_ptr = n;
-            // }
-            // pointer operator -(difference_type n) const//m not sure
-            // {
-            //     std::cout << "iterator - operator" << std::endl;
-            //     return (this->_ptr - n);
-            //}
+            /*
+                ============================= Member variables =============================
+            */
+            private :
+            pointer _ptr;
+
     };
 }
 #endif
@@ -215,5 +196,14 @@ location pointed to by the pointer "a". This notation is used to modify the valu
 in an array or other container through a pointer.
 
 
-
+template<class Category, class T, class Distance = ptrdiff_t,
+         class Pointer = T*, class Reference = T&>
+struct iterator                                            // deprecated in C++17
+{
+    typedef T         value_type;
+    typedef Distance  difference_type;
+    typedef Pointer   pointer;
+    typedef Reference reference;
+    typedef Category  iterator_category;
+};
 */
