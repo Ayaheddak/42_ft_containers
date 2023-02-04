@@ -1,18 +1,24 @@
 #ifndef RANDOM_ACCESS_ITERATOR_HPP
 #define RANDOM_ACCESS_ITERATOR_HPP
+#include "iterator_traits.hpp"
 #include <iostream>
+#include <vector>
 namespace ft
 {
     template <typename T>
     class iterator
     {
         public :
-
-            typedef T value_type; //type of the value
-            typedef std::ptrdiff_t difference_type; //difference between two iterators(distance)
-            typedef T* pointer; //pointer to the value_type
-            typedef T& reference; //reference to the value_type
-            typedef std::random_access_iterator_tag iterator_category;//type of iterator
+            typedef typename ft::iterator_traits<T>::iterator_category iterator_category;
+            typedef typename ft::iterator_traits<T>::value_type value_type;
+            typedef typename ft::iterator_traits<T>::difference_type difference_type;
+            typedef typename ft::iterator_traits<T>::pointer pointer;
+            typedef typename ft::iterator_traits<T>::reference reference;
+            // typedef T value_type; //type of the value
+            // typedef std::ptrdiff_t difference_type; //difference between two iterators(distance)
+            // typedef T* pointer; //pointer to the value_type
+            // typedef T& reference; //reference to the value_type
+            // typedef std::random_access_iterator_tag iterator_category;//type of iterator
 
         public :
         /*
@@ -39,47 +45,6 @@ namespace ft
             ============================== comparision ===================================
         */
             //TODO: template bcz we need to check if the other iterator is of the same type
-            template <class U>
-            bool operator==(const iterator<U> &other) const
-            {
-                std::cout << "iterator == operator" << std::endl;
-                return (this->_ptr == other.base());
-            }
-        
-            template <class U>
-            bool operator!=(const iterator<U> & other) const
-            {
-                std::cout << "iterator != operator" << std::endl;
-                return (this->_ptr != other.base());
-            }
-
-            template <class U>
-            bool operator<(const iterator<U> & other) const
-            {
-                std::cout << "iterator < operator" << std::endl;
-                return (this->_ptr < other.base());
-            }
-
-            template <class U>
-            bool operator>(const iterator<U> & other) const
-            {
-                std::cout << "iterator > operator" << std::endl;
-                return (this->_ptr > other.base());
-            }
-
-            template <class U>
-            bool operator<=(const iterator<U> & other) const
-            {
-                std::cout << "iterator <= operator" << std::endl;
-                return (this->_ptr <= other.base());
-            }
-
-            template <class U>
-            bool operator>=(const iterator<U> & other) const
-            {
-                std::cout << "iterator >= operator" << std::endl;
-                return (this->_ptr >= other.base());
-            }
         /*
             ============================= Arithmitics ====================================
         */
@@ -173,9 +138,98 @@ namespace ft
                 ============================= Member variables =============================
             */
             private :
-            pointer _ptr;
+                pointer _ptr;
 
     };
+    template <class T>
+    bool operator==(const iterator<T> &lhs, const iterator<T> &rhs)
+    {
+        std::cout << "iterator == operator" << std::endl;
+        return (lhs.base() == rhs.base());
+    }
+
+    template <class T, class U>
+    bool operator==(const iterator<T> &lhs, const iterator<U> &rhs)
+    {
+        std::cout << "iterator == operator" << std::endl;
+        return (lhs.base() == rhs.base());
+    }
+
+    template <class T>
+    bool operator<(const iterator<T> &lhs, const iterator<T> &rhs)
+    {
+        std::cout << "iterator < operator" << std::endl;
+        return (lhs.base() < rhs.base());
+    }
+
+    template <class T, class U>
+    bool operator<(const iterator<T> &lhs, const iterator<U> &rhs)
+    {
+        std::cout << "iterator < operator" << std::endl;
+        return (lhs.base() < rhs.base());
+    }
+
+    template <class T>
+    bool operator!=(const iterator<T> &lhs, const iterator<T> &rhs)
+    {
+        std::cout << "iterator != operator" << std::endl;
+        return (lhs.base() != rhs.base());
+    }
+
+    template <class T, class U>
+    bool operator!=(const iterator<T> &lhs, const iterator<U> &rhs)
+    {
+        std::cout << "iterator != operator" << std::endl;
+        return (lhs.base() != rhs.base());
+    }
+
+    template <class T>
+    bool operator>(const iterator<T> &lhs, const iterator<T> &rhs)
+    {
+        std::cout << "iterator > operator" << std::endl;
+        return (lhs.base() > rhs.base());
+    }
+    template <class T, class U>
+    bool operator>(const iterator<T> &lhs, const iterator<U> &rhs)
+    {
+        std::cout << "iterator > operator" << std::endl;
+        return (lhs.base() > rhs.base());
+    }
+
+    template <class T>
+    bool operator>=(const iterator<T> &lhs, const iterator<T> &rhs)
+    {
+        std::cout << "iterator >= operator" << std::endl;
+        return (lhs.base() >= rhs.base());
+    }
+
+    template <class T, class U>
+    bool operator>=(const iterator<T> &lhs, const iterator<U> &rhs)
+    {
+        std::cout << "iterator >= operator" << std::endl;
+        return (lhs.base() >= rhs.base());
+    }
+
+    template <class T>
+    bool operator<=(const iterator<T> &lhs, const iterator<T> &rhs)
+    {
+        std::cout << "iterator <= operator" << std::endl;
+        return (lhs.base() <= rhs.base());
+    }
+    
+    template <class T, class U>
+    bool operator<=(const iterator<T> &lhs, const iterator<U> &rhs)
+    {
+        std::cout << "iterator <= operator" << std::endl;
+        return (lhs.base() <= rhs.base());
+    }
+
+    //template <class T>
+    // operator-(const iterator<T> &lhs, const iterator<T> &rhs)
+    // {
+    //     std::cout << "iterator - operator" << std::endl;
+    //     return (lhs.base() - rhs.base());
+    // }
 }
 #endif
 /*
