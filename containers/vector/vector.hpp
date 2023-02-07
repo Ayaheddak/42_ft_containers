@@ -4,50 +4,79 @@
 #include "../../iterators/random_acess_iterator.hpp"
 #include "../../iterators/reverse_iterator.hpp"
 #include <vector>
+/*
+
+alloc	-	allocator to use for all memory allocations of this container
+count	-	the size of the container
+value	-	the value to initialize elements of the container with
+first, last	-	the range to copy the elements from
+other	-	another container to be used as source to initialize the elements of the container with
+init	-	initializer list to initialize the elements of the container with
+*/
 namespace ft
 {
     template <class T, class Allocator = std::allocator<T> >
     class vector
     {   
+    /* ============================== MEMBER TYPE ============================== */
         public :
-            typedef T value_type;
-            typedef Allocator allocator_type;
-            typedef typename allocator_type::reference reference;
-            typedef typename allocator_type::const_reference const_reference;
-            typedef typename allocator_type::pointer pointer;
-            typedef typename allocator_type::const_pointer const_pointer;
-            typedef std::random_access_iterator<T> iterator;
-            typedef std::random_access_iterator<const T> const_iterator;
-            typedef ft::reverse_iterator<iterator> reverse_iterator;
-            typedef ft::reverse_iterator<const_iterator> const_reverse_iterator;
-            typedef typename ft:iterator_traits<iterator>::difference_type difference_type;
-            typedef size_t size_type;
+        typedef T											            value_type;
+		typedef Alloc													allocator_type;
+		typedef typename allocator_type::reference						reference;
+		typedef typename allocator_type::const_reference				const_reference;
+		typedef typename allocator_type::pointer						pointer;
+		typedef typename allocator_type::const_pointer					const_pointer;
+		typedef typename ft::random_access_iterator<value_type>			iterator;
+		typedef typename ft::random_access_iterator<const value_type>	const_iterator;
+		typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
+		typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
+		typedef typename allocator_type::difference_type				difference_type;
+		typedef typename allocator_type::size_type						size_type;
+    
+	/* ============================== MEMBER ATTRIBUTES ============================== */
+
+        private :
+            pointer			_array;//An array of elements that store the actual data.
+            size_type		_size;// variable that stores the size of the vector, or the number of elements it contains.
+            size_type		_capacity;//A variable that stores the capacity of the vector, or the maximum number of elements it can hold.
+            allocator_type	_allocator;
+    /* ============================== CONSTRUCTORS/DESTRUCTOR ============================== */
         public :
-            vector():_array(NULL), _size(0), _capacity(0), _allocator(Allocator()){}
-            explicit vector(const allocator_type& alloc):_array(NULL), _size(0), _capacity(0), _allocator(alloc){}//
-            explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()):_array(NULL), _size(0), _capacity(0), _allocator(alloc)
+            /*
+                default constructor,
+                Constructs an empty container, with no elements.
+            */
+            explicit vector (const allocator_type& alloc = allocator_type()):_array(nullptr), _size(0), _capacity(0), _allocator(alloc){}
+
+            /*
+                Fill cons : Constructs a container with n elements. Each element is a copy of val.
+            */
+            explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
             {
-                this->assign(n, val);
+                // this->assign(n, val);
             }
+
+            /*
+
+            */
             template <class InputIterator>
-            vector(InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type()):_array(NULL), _size(0), _capacity(0), _allocator(alloc)
+            vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type())
             {
-                this->assign(first, last);
+                // this->assign(first, last);
             }
-            vector(const vector& x):_array(NULL), _size(0), _capacity(0), _allocator(x._allocator)
+            /*
+            
+            */
+            vector (const vector& x)
             {
-                this->assign(x.begin(), x.end());
+                // this->assign(x.begin(), x.end());
             }
-            ~vector()
-            {
-                this->clear();
-                this->_allocator.deallocate(this->_array, this->_capacity);
-            }
-            vector& operator=(const vector& x)
-            {
-                this->assign(x.begin(), x.end());
-                return (*this);
-            }
+            // vector& operator=(const vector& x)
+            // {
+            //     this->assign(x.begin(), x.end());
+            //     return (*this);
+            // }
+    /* ============================== MEMBER FUNCTIONS =================================== */
             /*
                 ============================== iterator ===================================
             */
@@ -195,11 +224,6 @@ namespace ft
             {
                 this->_size--;
             }
-        private :
-            T* _array;
-            size_t _size;
-            size_t _capacity;
-            Allocator _allocator;
     };
     
 }
