@@ -66,4 +66,24 @@ Under the hood, a vector is composed of three main components:
 When you create a vector, you can specify its initial size and capacity. If you do not specify these values, the vector will be created with a default size and capacity.
 # When you add elements to the vector, it checks if there is enough capacity to store the new elements. If there is enough capacity, the elements are simply added to the end of the vector. If not, the vector needs to resize itself to accommodate the new elements. This process is called reallocation, and it involves creating a new array with a larger capacity and copying the existing elements to the new array.
 When you remove elements from the vector, it adjusts its size accordingly, but its capacity remains the same unless you explicitly reduce it.
+- the capacity of a vector represents the maximum number of elements it can store without having to reallocate memory and increase its capacity again. The size of a vector, on the other hand, represents the actual number of elements currently stored in the vector.
+========================================================================================================================================
+                                            # Questions #
 
+- Why we use new in c++ and dont use malloc and what's difference between them ?
+    - malloc() is a library function of stdlib.h and it was used in C language to allocate memory for N blocks at run time, it can also be used in C++ programming language. Whenever a program needs memory to declare at run time we can use this function.
+    -  new is an operator in C++ programming language, it is also used to declare memory for N blocks at run time.
+here are some differences between malloc and new :
+1. new allocates memory and calls the constructor for object initialization. But malloc() allocates memory and does not call the     constructor.
+2. new is an operator whereas malloc() is a library function.
+3. The return type of new is the exact data type while malloc() returns void*.
+4. new is faster than malloc() because an operator is always faster than a function
+
+- Why we use Allocator and not new and delete ?
+    Allocators are used in C++ instead of new and delete to manage the memory used by a container because they provide a higher level of abstraction, portability, consistency, and customization. This makes the code easier to write, maintain, and debug.
+- What's a allocator ?
+    an allocator is an object that manages the memory used by a container, such as a vector or a list. The allocator is responsible for allocating and deallocating memory as needed to store the elements of the container.
+
+- What's The purpose of use them ?
+    * The purpose of an allocator is to manage the memory used by the container so that the container can grow and shrink dynamically, without the programmer having to worry about allocating and deallocating memory manually.
+    * the benefit of using an allocator is that it allows the container to be flexible and dynamic, without the programmer having to worry about the details of memory management. You can just focus on using the container to store and manipulate data, and the allocator takes care of the rest.

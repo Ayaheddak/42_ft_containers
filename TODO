@@ -1,0 +1,9 @@
+- what's a type trait ?
+- std::random_access_iterator_tag
+
+- what's enable if !
+    * type trait is used in C++ to conditionally enable or disable a function or class template based on a compile-time boolean condition.
+    * The purpose of std::enable_if is to provide a way to choose between two different implementations of a function or class template based on whether a certain type trait is satisfied
+
+- what's a integral :
+    * is a type trait that determines if a given type is an integral type. An integral type is a data type that represents a set of integers, such as char, short, int, long, long long, unsigned, and bool.

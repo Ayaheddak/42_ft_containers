@@ -1,6 +1,7 @@
 #ifndef REVERSE_ITERATOR_HPP
 # define REVERSE_ITERATOR_HPP
 #include "iterator_traits.hpp"
+#include "../containers/vector/vector.hpp"
 #include <iterator>
 /*
 **A reverse iterator is an iterator that can be used to traverse a container in reverse order
