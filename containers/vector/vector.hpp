@@ -38,8 +38,8 @@ namespace ft
             typedef typename allocator_type::const_reference				const_reference;
             typedef typename allocator_type::pointer						pointer;
             typedef typename allocator_type::const_pointer					const_pointer;
-            typedef typename ft::random_access_iterator<pointer>			            iterator;
-            typedef typename ft::random_access_iterator<const pointer>	                const_iterator;
+            typedef typename ft::random_access_iterator<pointer>			iterator;
+            typedef typename ft::random_access_iterator<const pointer>	    const_iterator;
             typedef typename ft::reverse_iterator<iterator>					reverse_iterator;
             typedef typename ft::reverse_iterator<const_iterator>			const_reverse_iterator;
             typedef typename allocator_type::difference_type				difference_type;
@@ -405,8 +405,17 @@ namespace ft
                     return (this->_array[this->_size - 1]);
                 }
                 /*
-                    TODO: data !!!
+                    return a direct pointer to the memory array 
+                    used internally by the vector to store its owned elements.
                 */
+                value_type *data()
+                {
+                    return (this->_array);
+                }
+                const value_type *data() const
+                {
+                      return (this->_array);
+                }
 
             /*
                 ============================== modifiers ===================================
@@ -484,8 +493,13 @@ namespace ft
                 {
                     if (this->_size == this->_capacity)
                     {
-                        this->_capacity = (this->_capacity == 0) ? 1 : this->_capacity * 2;
-                        pointer tmp = this->_allocator.allocate(this->_capacity);
+                        pointer tmp;
+    
+                        if (this->_capacity == 0) 
+                            this->_capacity = 1;
+                        else
+                            this->_capacity *= 2;
+                        tmp = this->_allocator.allocate(this->_capacity);
                         for (size_type i = 0; i < this->_size; i++)
                             tmp[i] = this->_array[i];
                         this->_allocator.deallocate(this->_array, this->_capacity);
@@ -515,126 +529,122 @@ namespace ft
                     - Otherwise, only the iterators and references before the insertion point remain valid.
                     - The past-the-end iterator is also invalidated.
                 */
-                iterator insert (iterator position, const value_type& val)
-                {
-                    size_type i;
-                    size_type pos;
-                    pointer tmp;
+                // 3 9 4 7 3
+                // iterator insert (iterator position, const value_type& val)
+                // {
+                //     size_type   i;
+                //     size_type   pos;
+                //     pointer     tmp;
 
-                    i = 0;
-                    pos = position - this->begin();
-                    if (this->_size == this->_capacity)
-                    {
-                        this->_capacity = (this->_capacity == 0) ? 1 : this->_capacity * 2;
-                        tmp = this->_allocator.allocate(this->_capacity);
-                        for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
-                        this->_allocator.deallocate(this->_array, this->_size);
-                        this->_array = tmp;
-                    }
-                    while (i < this->_size - pos)
-                    {
-                        this->_array[this->_size - i] = this->_array[this->_size - i - 1];
-                        i++;
-                    }
-                    this->_array[pos] = val;
-                    this->_size++;
-                    return (this->begin() + pos);
-                }
-                /*
-                    - The vector is extended by inserting new elements before the element at the specified position, effectively increasing the container size by the number of elements inserted.
-                    - This causes an automatic reallocation of the allocated storage space if - and only if - the new vector size surpasses the current vector capacity.
-                    - param :
-                        - position : Position in the vector where the new elements are inserted.
-                        - n : Number of elements to insert. Each element is initialized to a copy of val.
-                        - val : Value to be copied (or moved) to the inserted elements.
-                    - return :
-                        - An iterator that points to the first of the newly inserted elements.
-                    - If the new size() is greater than capacity(), all iterators, including the past-the-end iterator, and all references to the elements are invalidated.
-                    - Otherwise, only the iterators and references before the insertion point remain valid.
-                    - The past-the-end iterator is also invalidated.
-                */
-                void insert (iterator position, size_type n, const value_type& val)
-                {
-                    size_type i;
-                    size_type pos;
-                    pointer tmp;
+                //     i = 0;
+                //     pos = std::distance(this->begin(), position);// need to know position of 
+                //     if (this->_size == this->_capacity)
+                //     {
+                //         if (this->_capacity == 0) 
+                //             this->_capacity = 1;
+                //         else
+                //             this->_capacity *= 2;
+                //         tmp = this->_allocator.allocate(this->_capacity);
+                //         for (size_type i = 0; i < this->_size; i++)
+                //             tmp[i] = this->_array[i];
+                //         this->_allocator.deallocate(this->_array, this->_size);
+                //         this->_array = tmp;
+                //     }
+                //     while (i < this->_size - pos)
+                //     {
+                //         this->_array[this->_size - i] = this->_array[this->_size - i - 1];
+                //         i++;
+                //     }
+                //     this->_array[pos] = val;
+                //     this->_size++;
+                //     return (this->begin() + pos);
+                // }
+    
+                // void insert (iterator position, size_type n, const value_type& val)
+                // {
+                //     size_type i;
+                //     size_type pos;
+                //     pointer tmp;
 
-                    i = 0;
-                    pos = position - this->begin();
-                    if (this->_size + n > this->_capacity)
-                    {
-                        //this->_capacity = (this->_capacity == 0) ? 1 : this->_capacity * 2;
-                        if (this->_capacity == 0) 
-                            this->_capacity = 1;
-                        else
-                            this->_capacity *= 2;
-                        while (this->_size + n > this->_capacity)
-                            this->_capacity *= 2;
-                        tmp = this->_allocator.allocate(this->_capacity);
-                        for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
-                        this->_allocator.deallocate(this->_array, this->_size);
-                        this->_array = tmp;
-                    }
-                    while (i < this->_size - pos)
-                    {
-                        this->_array[this->_size + n - i - 1] = this->_array[this->_size - i - 1];
-                        i++;
-                    }
-                    while (n > 0)
-                    {
-                        this->_array[pos] = val;
-                        pos++;
-                        n--;
-                    }
-                    this->_size += n;
-                }
-                template <class InputIterator>
-                void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
-                {
-                    size_type i;
-                    size_type pos;
-                    size_type n;
-                    pointer tmp;
+                //     i = 0;
+                //     pos = std::distance(this->begin(), position);
+                //     // pos = std::distance(position - this->_array;
+                //     if (this->_size + n > this->_capacity)
+                //     {
+                //         //this->_capacity = (this->_capacity == 0) ? 1 : this->_capacity * 2;
+                //         if (this->_capacity == 0) 
+                //             this->_capacity = 1;
+                //         else
+                //             this->_capacity *= 2;
+                //         while (this->_size + n > this->_capacity)
+                //             this->_capacity *= 2;
+                //         tmp = this->_allocator.allocate(this->_capacity);
+                //         for (size_type i = 0; i < this->_size; i++)
+                //             tmp[i] = this->_array[i];
+                //         this->_allocator.deallocate(this->_array, this->_size);
+                //         this->_array = tmp;
+                //     }
+                //     while (i < this->_size - pos)
+                //     {
+                //         this->_array[this->_size + n - i - 1] = this->_array[this->_size - i - 1];
+                //         i++;
+                //     }
+                //     while (n > 0)
+                //     {
+                //         this->_array[pos] = val;
+                //         pos++;
+                //         n--;
+                //     }
+                //     this->_size += n;
+                // }
 
-                    i = 0;
-                    pos = position - this->begin();
-                    n = last - first;
-                    if (this->_size + n > this->_capacity)
-                    {
-                        // this->_capacity = (this->_capacity == 0) ? 1 : this->_capacity * 2;
-                        if (this->_capacity == 0) 
-                            this->_capacity = 1;
-                        else
-                            this->_capacity *= 2;
-                        while (this->_size + n > this->_capacity)
-                            this->_capacity *= 2;
-                        tmp = this->_allocator.allocate(this->_capacity);
-                        for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
-                        this->_allocator.deallocate(this->_array, this->_size);
-                        this->_array = tmp;
-                    }
-                    while (i < this->_size - pos)
-                    {
-                        this->_array[this->_size + n - i - 1] = this->_array[this->_size - i - 1];
-                        i++;
-                    }
-                    while (n > 0)
-                    {
-                        this->_array[pos] = *first;
-                        pos++;
-                        first++;
-                        n--;
-                    }
-                    this->_size += n;
-                }
+                // template <class InputIterator>
+                // void insert (iterator position, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+                // {
+                //     size_type i;
+                //     size_type pos;
+                //     size_type n;
+                //     pointer tmp;
+
+                //     i = 0;
+                //     pos = std::distance(this->begin(), position);
+                //     // n = last - first;
+                //     n = std::distance(first, last);
+                //     if (this->_size + n > this->_capacity)
+                //     {
+                //         // this->_capacity = (this->_capacity == 0) ? 1 : this->_capacity * 2;
+                //         if (this->_capacity == 0) 
+                //             this->_capacity = 1;
+                //         else
+                //             this->_capacity *= 2;
+                //         while (this->_size + n > this->_capacity)
+                //             this->_capacity *= 2;
+                //         tmp = this->_allocator.allocate(this->_capacity);
+                //         for (size_type i = 0; i < this->_size; i++)
+                //             tmp[i] = this->_array[i];
+                //         this->_allocator.deallocate(this->_array, this->_size);
+                //         this->_array = tmp;
+                //     }
+                //     while (i < this->_size - pos)
+                //     {
+                //         this->_array[this->_size + n - i - 1] = this->_array[this->_size - i - 1];
+                //         i++;
+                //     }
+                //     while (n > 0)
+                //     {
+                //         this->_array[pos] = *first;
+                //         pos++;
+                //         first++;
+                //         n--;
+                //     }
+                //     this->_size += n;
+                // }
                 /*
                     - Removes from the vector either a single element (position) or a range of elements ([first,last)).
                     - position : iterator pointing to a single element to be removed from the vector.
                     - first and last : Iterators specifying a range within the vector] to be removed: [first,last).
                 */
+                // 4 3 2 0
                 iterator erase (iterator position)
                 {
                     size_type i;
@@ -697,8 +707,70 @@ namespace ft
                 {
                     this->_size = 0;
                 }
+                /*
+                    - The vector is extended by inserting new elements before the element at the specified position, effectively increasing the container size by the number of elements inserted.
+                    - The content of val is copied (or moved) to the inserted elements.
+                    - This effectively increases the container size by the number of elements inserted.
+                    - The iterator position can be a valid iterator or the vector.end() iterator.
+                    - The past-the-end iterator (vector.end()) is a valid argument for position, 
+                    - in which case the new elements are inserted at the end of the container.
+                    - The function returns an iterator that points to the first of the newly inserted elements.
+                */
                 template <class... Args>
-                iterator emplace (const_iterator position, Args&&... args);
+                iterator emplace (const_iterator position, Args&&... args)
+                {
+                    size_type i;
+                    size_type pos;
+                    pointer tmp;
+
+                    i = 0;
+                    pos = position - this->begin();
+                    if (this->_size + 1 > this->_capacity)
+                    {
+                        if (this->_capacity == 0) 
+                            this->_capacity = 1;
+                        else
+                            this->_capacity *= 2;
+                        while (this->_size + 1 > this->_capacity)
+                            this->_capacity *= 2;
+                        tmp = this->_allocator.allocate(this->_capacity);
+                        for (size_type i = 0; i < this->_size; i++)
+                            tmp[i] = this->_array[i];
+                        this->_allocator.deallocate(this->_array, this->_size);
+                        this->_array = tmp;
+                    }
+                    while (i < this->_size - pos)
+                    {
+                        this->_array[this->_size - i] = this->_array[this->_size - i - 1];
+                        i++;
+                    }
+                    this->_array[pos] = value_type(std::forward<Args>(args)...);
+                    this->_size++;
+                    return (this->begin() + pos);
+                }
+
+                template <class... Args>  
+                void emplace_back (Args&&... args)
+                {
+                    pointer tmp;
+
+                    if (this->_size + 1 > this->_capacity)
+                    {
+                        if (this->_capacity == 0) 
+                            this->_capacity = 1;
+                        else
+                            this->_capacity *= 2;
+                        while (this->_size + 1 > this->_capacity)
+                            this->_capacity *= 2;
+                        tmp = this->_allocator.allocate(this->_capacity);
+                        for (size_type i = 0; i < this->_size; i++)
+                            tmp[i] = this->_array[i];
+                        this->_allocator.deallocate(this->_array, this->_size);
+                        this->_array = tmp;
+                    }
+                    this->_array[this->_size] = value_type(std::forward<Args>(args)...);
+                    this->_size++;
+                }
 
             /*
                 ============================== Allocator ===================================
@@ -708,6 +780,58 @@ namespace ft
                     return (this->_allocator);
                 }
     };
+    template <class T, class Alloc>  
+    bool operator== (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        if (lhs.size() != rhs.size())
+            return (false);
+        for (size_t i = 0; i < lhs.size(); i++)
+            if (lhs[i] != rhs[i])
+                return (false);
+        return (true);
+    }
+
+    template <class T, class Alloc>  
+    bool operator!= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return (!(lhs == rhs));
+    }
+
+    template <class T, class Alloc> 
+    bool operator<  (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        size_t i;
+
+        i = 0;
+        while (i < lhs.size() && i < rhs.size())
+        {
+            if (lhs[i] < rhs[i])
+                return (true);
+            else if (lhs[i] > rhs[i])
+                return (false);
+            i++;
+        }
+        if (i == lhs.size() && i != rhs.size())
+            return (true);
+        return (false);
+    }
+
+    template <class T, class Alloc>  bool operator<= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return (!(rhs < lhs));
+    }
+
+    template <class T, class Alloc>  bool operator>
+    (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return (rhs < lhs);
+    }
+
+    template <class T, class Alloc>
+    bool operator>= (const vector<T,Alloc>& lhs, const vector<T,Alloc>& rhs)
+    {
+        return (!(lhs < rhs));
+    }
     
 }
 #endif
