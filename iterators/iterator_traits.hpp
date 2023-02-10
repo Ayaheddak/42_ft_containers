@@ -2,14 +2,14 @@
 #define ITERATOR_TRAITS_HPP
 namespace ft
 {
-        template <class Iterator>
+        template <class iterator>
     struct iterator_traits
     {
-            typedef typename Iterator::difference_type     difference_type; // type of distance between two iterators
-            typedef typename Iterator::value_type           value_type; //type of element pointed by the iterator
-            typedef typename Iterator::pointer              pointer; // type of pointer to the element pointed by the iterator
-            typedef typename Iterator::reference            reference; // type of reference to the element pointed by the iterator
-            typedef typename Iterator::iterator_category    iterator_category;//random or output or input or forward or bidirectional ....
+            typedef typename iterator::difference_type     difference_type; // type of distance between two iterators
+            typedef typename iterator::value_type           value_type; //type of element pointed by the iterator
+            typedef typename iterator::pointer              pointer; // type of pointer to the element pointed by the iterator
+            typedef typename iterator::reference            reference; // type of reference to the element pointed by the iterator
+            typedef typename iterator::iterator_category    iterator_category;//random or output or input or forward or bidirectional ....
     };
     
         template <class T>
