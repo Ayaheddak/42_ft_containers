@@ -1,6 +1,6 @@
 NAME	=	containers
 
-UTILS	=	iterators/*.cpp
+UTILS	=	containers/vector
 
 FLAGS	=	-Wall -Wextra -Werror -std=c++98
 

@@ -99,11 +99,16 @@ namespace ft
             this->_iter -= n;
             return (*this);
         }
-        
+
+        difference_type operator-(const random_access_iterator &other) const
+        {
+            return (this->_iter - other.base());
+        }
+
         reference operator[](difference_type n) const
         {
             return (this->_iter[n]);
-        } 
+        }
     };
 
     /*

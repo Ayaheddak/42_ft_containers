@@ -66,8 +66,9 @@ Under the hood, a vector is composed of three main components:
 When you create a vector, you can specify its initial size and capacity. If you do not specify these values, the vector will be created with a default size and capacity.
 # When you add elements to the vector, it checks if there is enough capacity to store the new elements. If there is enough capacity, the elements are simply added to the end of the vector. If not, the vector needs to resize itself to accommodate the new elements. This process is called reallocation, and it involves creating a new array with a larger capacity and copying the existing elements to the new array.
 When you remove elements from the vector, it adjusts its size accordingly, but its capacity remains the same unless you explicitly reduce it.
+
 - the capacity of a vector represents the maximum number of elements it can store without having to reallocate memory and increase its capacity again. The size of a vector, on the other hand, represents the actual number of elements currently stored in the vector.
-========================================================================================================================================
+=================================================================================
                                             # Questions #
 
 - Why we use new in c++ and dont use malloc and what's difference between them ?
@@ -87,3 +88,12 @@ here are some differences between malloc and new :
 - What's The purpose of use them ?
     * The purpose of an allocator is to manage the memory used by the container so that the container can grow and shrink dynamically, without the programmer having to worry about allocating and deallocating memory manually.
     * the benefit of using an allocator is that it allows the container to be flexible and dynamic, without the programmer having to worry about the details of memory management. You can just focus on using the container to store and manipulate data, and the allocator takes care of the rest.
+- what's a type trait ?
+- std::random_access_iterator_tag
+
+- what's enable if !
+    * type trait is used in C++ to conditionally enable or disable a function or class template based on a compile-time boolean condition.
+    * The purpose of std::enable_if is to provide a way to choose between two different implementations of a function or class template based on whether a certain type trait is satisfied
+
+- what's a integral :
+    * is a type trait that determines if a given type is an integral type. An integral type is a data type that represents a set of integers, such as char, short, int, long, long long, unsigned, and bool.
