@@ -63,7 +63,7 @@ namespace ft
 				The memory for the elements of the vector will be managed by the specified allocator. 
                 alloc : The container keeps and uses an internal copy of this allocator.
             */
-            explicit vector (const allocator_type& alloc = allocator_type()):_array(NULL), _size(0), _capacity(0), _allocator(alloc){}
+            explicit vector (const allocator_type& alloc = allocator_type()):_array(nullptr), _size(0), _capacity(0), _allocator(alloc){}
 
             /*
 				Fill constructor : Fill constructor: This creates a vector with a specified number of elements, all initialized to a given value.
@@ -77,12 +77,18 @@ namespace ft
             */
             explicit vector (size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type())
             {
-                this->_array = this->_allocator.allocate(n);// allocating memory to store the elements of the vector,
-                this->_size = n;
-                this->_capacity = n;
-                for (size_type i = 0; i < n; i++)
-                    this->_array[i] = val;
-                this->_allocator = alloc;
+				this->_allocator = alloc;
+				this->_size = n;
+				this->_capacity = n;
+				this->_array = this->_allocator.allocate(n);// allocating memory to store the elements of the vector,
+				for (size_type i = 0; i < n; i++)
+					this->_allocator.construct(&this->_array[i], val);
+                // this->_array = this->_allocator.allocate(n);// allocating memory to store the elements of the vector,
+                // this->_size = n;
+                // this->_capacity = n;
+                // for (size_type i = 0; i < n; i++)
+                //     this->_array[i] = val;
+                // this->_allocator = alloc;
             }
             /*
 				- range constructor : Constructs a container with as many elements as the range [first,last),
@@ -90,20 +96,23 @@ namespace ft
 				-  two iterators (first and last) which specify the range of elements to copy into the vector The elements are copied from first up to (but not including) last
 				- The optional alloc argument specifies an allocator object to be used for memory allocation.
                 - std::enable_if helps to avoid ambiguity and to ensure that the correct constructor is selected based on the type of the arguments.
+				- TODO: diff between NULL and nullptr
             */
             template <class InputIterator>
             vector (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type(),
             typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
             {
-                this->_size = 0;
-                this->_array = NULL;
-                this->_capacity = 0;
-                this->_allocator = alloc;
-                while (first != last)
-                {
-                    this->push_back(*first);
-                    first++;
-                }
+				difference_type range;
+
+				range = last - first;
+				if (range <= 0)
+					return ;
+				this->_allocator = alloc;
+				this->_array = this->_allocator.allocate(range);
+				this->_size = range;
+				this->_capacity = range;
+				for (difference_type i = 0; i < range; i++, *first++)
+					this->_allocator.construct(&this->_array[i], *first);
             }
             /*
 				Copy constructor: This creates a vector by copying the contents of another vector. 
@@ -113,11 +122,12 @@ namespace ft
             */
             vector (const vector& x)
 			{
+				this->_allocator = x._allocator;
                 this->_size = x._size;
                 this->_capacity = x._capacity;
                 this->_array = this->_allocator.allocate(this->_capacity);
                 for (size_type i = 0; i < this->_size; i++)
-                    this->_array[i] = x._array[i];
+					this->_allocator.construct(&this->_array[i], x._array[i]);
             }
             /*
                 - The vector is assigned a copy of the contents of x.
@@ -130,9 +140,11 @@ namespace ft
                 {
                     this->_size = x._size;
                     this->_capacity = x._capacity;
+					this->_allocator = x._allocator;
                     this->_array = this->_allocator.allocate(this->_capacity);
+					// this->_allocator.deallocate(this->_array, this->_capacity);
                     for (size_type i = 0; i < this->_size; i++)
-                        this->_array[i] = x._array[i];
+						this->_allocator.construct(&this->_array[i], x._array[i]);
                 }
                 return (*this);
             }
@@ -150,62 +162,40 @@ namespace ft
                     - Returns an iterator pointing to the first element in the vector.
                     - If the container is empty, the returned iterator value shall not be dereferenced.
                 */
-                iterator begin()
-                {
-                    return (iterator(_array));
-                }
-                const_iterator begin() const
-                {
-                    return (const_iterator(_array));
-                }
+                iterator begin() { return (iterator(_array)); }
+
+                const_iterator begin() const { return (const_iterator(_array)); }
 
                 /*
                     - Returns an iterator referring to the past-the-end element in the vector container.
                     - The past-the-end element is the theoretical element that would follow the last element in the vector.
                     - It does not point to any element, and thus shall not be dereferenced.
                 */
-                iterator end()
-                {
-                    return (iterator(this->_array + _size));
-                }
-                const_iterator end() const
-                {
-                    return (const_iterator(this->_array + _size));
-                }
+                iterator end() { return (iterator(_array + _size)); }
+                const_iterator end() const { return (const_iterator(_array + _size)); }
                 /*
                     - Returns a reverse iterator pointing to the last element in the vector (i.e., its reverse beginning).
                     - If the container is empty, the returned iterator value shall not be dereferenced.
                 */
-                reverse_iterator rbegin()
-                {
-                    return (reverse_iterator(this->_array + _size - 1));
-                }
-                const_reverse_iterator rbegin() const
-                {
-                    return (const_reverse_iterator(this->_array + _size - 1));
-                }
+                reverse_iterator rbegin() { return (reverse_iterator(this->end())); }
+
+                const_reverse_iterator rbegin() const { return (const_reverse_iterator(this->end())); }
                 /*
                     - Returns a reverse iterator pointing to the theoretical element preceding the first element in the vector (which is considered its reverse end).
                     - The range between vector::rend and vector::rbegin includes all the elements of the vector (in reverse order).
                 */
-                reverse_iterator rend()
-                {
-                    return (reverse_iterator(this->_array - 1));
-                }
-                const_reverse_iterator rend() const
-                {
-                    return (const_reverse_iterator(this->_array - 1));
-                }
+                reverse_iterator rend() { return (reverse_iterator(this->begin())); }
+                const_reverse_iterator rend() const { return (const_reverse_iterator(this->begin())); }
                 /*
                     -Returns a const_iterator pointing to the first element in the container.
                     - A const_iterator is an iterator that points to const content. This iterator can be increased and decreased (unless it is itself also const)
                         just like the iterator returned by vector::begin
                         but it cannot be used to modify the contents it points to, even if the vector object is not itself const.
                 */
-               const_iterator cbegin() const
-               {
-                    return (const_iterator(this->_array));
-               }
+            //    const_iterator cbegin() const
+            //    {
+            //         return (const_iterator(this->_array));
+            //    }
 
                 /*
                       - Returns a const_iterator pointing to the past-the-end element in the container.
@@ -311,14 +301,16 @@ namespace ft
                 {
                     if (n > this->_capacity)
                     {
-                        pointer tmp;
-
-                        this->_capacity = n;
-                        tmp = this->_allocator.allocate(this->_capacity);
+                        pointer tmp = this->_allocator.allocate(n);
                         for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
+						{
+							this->_allocator.construct(&tmp[i], this->_array[i]);
+							this->_allocator.destroy(&this->_array[i]);
+						}
                         this->_allocator.deallocate(this->_array, this->_size);
                         this->_array = tmp;
+                        this->_capacity = n;
+
                     }
                 }
                 /*
@@ -441,52 +433,73 @@ namespace ft
                 template <class InputIterator>
                 void assign (InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
                 {
-                    size_type i;
-                    size_type size;
+					size_t n = last - first;
+					for (size_type i = 0; i < this->_size; i++)
+						this->_allocator.destroy(&this->_array[i]);
+	
+					if (n > this->_capacity)
+					{
+						this->_allocator.deallocate(this->_array, this->_capacity);
+						this->_array = this->_allocator.allocate(n);
+						this->_capacity = n;
+					}
+					for (size_t i = 0; i < n; i++, first++)
+						this->_allocator.construct(&this->_array[i], *first);
+					this->_size = n;
+                    // size_type i;
+                    // size_type size;
                     
-                    i = 0;
-                    size = 0;
-                    while (first != last)// cuz last no include
-                    {
-                        first++;
-                        size++;
-                    }
-                    if (size > this->_capacity)
-                    {
-                        pointer tmp;
+                    // i = 0;
+                    // size = 0;
+					// size = last-  first;
+                    // if (size > this->_capacity)
+                    // {
+                    //     pointer tmp;
 
-                        this->_capacity = size;
-                        tmp = this->_allocator.allocate(this->_capacity);
-                        for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
-                        this->_allocator.deallocate(this->_array, this->_size);
-                        this->_array = tmp;
-                    }
-                    while (i < size)
-                    {
-                        this->_array[i] = *first;
-                        first++;
-                        i++;
-                    }
-                    this->_size = size;
+                    //     this->_capacity = size;
+					// 	tmp = this->_allocator.allocate(this->_capacity);
+                    //     for (size_type i = 0; i < this->_size; i++)
+					// 		this->_allocator.construct(&tmp[i], this->_array[i]);
+                    //     this->_allocator.deallocate(this->_array, this->_size);
+                    //     this->_array = tmp;
+                    // }
+                    // while (i < size)
+                    // {
+                    //     this->_array[i] = *first;
+                    //     first++;
+                    //     i++;
+                    // }
+                    // this->_size = size;
                 }
 
                 void assign (size_type n, const value_type& val)
                 {
-                    if (n > this->_capacity)
-                    {
-                        pointer tmp;
+					for (size_type i = 0; i < this->_size; i++)
+						this->_allocator.destroy(&this->_array[i]);
+					if (n > this->_capacity)
+					{
+						this->_allocator.deallocate(this->_array, this->_capacity);
+						this->_array = this->_allocator.allocate(n);
+						this->_capacity = n;
+					}
+					for (size_type i = 0; i < n; i++)
+						this->_allocator.construct(&this->_array[i], val);
+					this->_size = n;
+                    // if (n > this->_capacity)
+                    // {
+                    //     pointer tmp;
 
-                        this->_capacity = n;
-                        tmp = this->_allocator.allocate(this->_capacity);
-                        for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
-                        this->_allocator.deallocate(this->_array, this->_size);
-                        this->_array = tmp;
-                    }
-                    for (size_type i = 0; i < n; i++)
-                        this->_array[i] = val;
-                    this->_size = n;
+                    //     this->_capacity = n;
+                    //     tmp = this->_allocator.allocate(this->_capacity);
+                    //     for (size_type i = 0; i < this->_size; i++)
+					// 		this->_allocator.construct(&tmp[i], this->_array[i]);
+                    //         // tmp[i] = this->_array[i];
+                    //     this->_allocator.deallocate(this->_array, this->_size);
+                    //     this->_array = tmp;
+                    // // }
+                    // for (size_type i = 0; i < n; i++)
+                    //     this->_array[i] = val;
+                    // this->_size = n;
                 }
                 /*
                     - Adds a new element at the end of the vector, after its current last element.
@@ -498,20 +511,8 @@ namespace ft
                 void push_back (const value_type& val)
                 {
                     if (this->_size == this->_capacity)
-                    {
-                        pointer tmp;
-    
-                        if (this->_capacity == 0) 
-                            this->_capacity = 1;
-                        else
-                            this->_capacity *= 2;
-                        tmp = this->_allocator.allocate(this->_capacity);
-                        for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
-                        this->_allocator.deallocate(this->_array, this->_capacity);
-                        this->_array = tmp;
-                    }
-                    this->_array[this->_size] = val;
+                        (this->_capacity == 0) ? reserve(1)  : reserve(this->_capacity * 2);
+					this->_allocator.construct(&this->_array[this->_size], val);
                     this->_size++;
                 }
                 /*
@@ -521,7 +522,7 @@ namespace ft
                 */
                 void pop_back()
                 {
-                    this->_size--;
+					this->_allocator.destroy(&this->_array[this->_size--]);
                 }
                 /*
                     - The vector is extended by inserting new elements before the element at the specified position, effectively increasing the container size by the number of elements inserted.
@@ -546,13 +547,10 @@ namespace ft
                     pos = position - this->begin();// need to know position of 
                     if (this->_size == this->_capacity)
                     {
-                        if (this->_capacity == 0) 
-                            this->_capacity = 1;
-                        else
-                            this->_capacity *= 2;
+						(this->_capacity == 0) ? reserve(1)  : reserve(this->_capacity * 2);
                         tmp = this->_allocator.allocate(this->_capacity);
                         for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
+							this->_allocator.construct(&tmp[i], this->_array[i]);
                         this->_allocator.deallocate(this->_array, this->_size);
                         this->_array = tmp;
                     }
@@ -576,15 +574,16 @@ namespace ft
                     pos = position - this->begin();
                     if (this->_size + n > this->_capacity)
                     {
-                        if (this->_capacity == 0) 
-                            this->_capacity = 1;
-                        else
-                            this->_capacity *= 2;
+						(this->_capacity == 0) ? reserve(1)  : reserve(this->_capacity * 2);
+                    //     if (this->_capacity == 0) 
+                    //         this->_capacity = 1;
+                    //     else
+                    //         this->_capacity *= 2;
                         while (this->_size + n > this->_capacity)
                             this->_capacity *= 2;
                         tmp = this->_allocator.allocate(this->_capacity);
                         for (size_type i = 0; i < this->_size; i++)
-                            tmp[i] = this->_array[i];
+							this->_allocator.construct(&tmp[i], this->_array[i]);
                         this->_allocator.deallocate(this->_array, this->_size);
                         this->_array = tmp;
                     }
