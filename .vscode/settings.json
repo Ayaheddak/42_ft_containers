@@ -64,6 +64,13 @@
         "__tree": "cpp",
         "map": "cpp",
         "functional": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "deque": "cpp",
+        "iomanip": "cpp",
+        "list": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "set": "cpp",
+        "stack": "cpp"
     }
 }

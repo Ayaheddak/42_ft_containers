@@ -1,7 +1,6 @@
 #ifndef REVERSE_ITERATOR_HPP
 # define REVERSE_ITERATOR_HPP
 #include "iterator_traits.hpp"
-#include "../containers/vector/vector.hpp"
 #include <iterator>
 /*
 **A reverse iterator is an iterator that can be used to traverse a container in reverse order
@@ -14,12 +13,12 @@ namespace ft
     class reverse_iterator
     {
         public :
-            typedef Iterator iterator_type;
-            typedef typename iterator_traits<Iterator>::iterator_category iterator_category;
-            typedef typename iterator_traits<Iterator>::value_type value_type;
-            typedef typename iterator_traits<Iterator>::difference_type difference_type;
-            typedef typename iterator_traits<Iterator>::pointer pointer;
-            typedef typename iterator_traits<Iterator>::reference reference;
+            typedef Iterator                                                iterator_type;
+            typedef typename ft::iterator_traits<Iterator>::iterator_category   iterator_category;
+            typedef typename ft::iterator_traits<Iterator>::value_type          value_type;
+            typedef typename ft::iterator_traits<Iterator>::difference_type     difference_type;
+            typedef typename ft::iterator_traits<Iterator>::pointer             pointer;
+            typedef typename ft::iterator_traits<Iterator>::reference           reference;
         /* ============================== MEMBER ATTRIBUTES ============================== */
         private :
             //is used to store the underlying iterator
@@ -139,7 +138,8 @@ namespace ft
 
             reference operator[](difference_type n) const
             {
-                return (this->_it- n - 1);
+                //return (this->_it- n - 1);
+                return (*(this->_it - n - 1));
             }
     };
     /*
