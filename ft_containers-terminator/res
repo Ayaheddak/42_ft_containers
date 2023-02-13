@@ -1,8 +1,0 @@
-[31;1merror compiling tests/vector/assign.cpp[0m
-vector assign:[31;1m KO! [0m
-[31;1merror compiling tests/vector/assign_mixed.cpp[0m
-vector assign_mixed:[31;1m KO! [0m
-[31;1merror compiling tests/vector/assign_range.cpp[0m
-vector assign_range:[31;1m KO! [0m
-[31;1merror compiling tests/vector/assignment.cpp[0m
-vector assignment:[31;1m KO! [0m
