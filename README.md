@@ -97,3 +97,18 @@ here are some differences between malloc and new :
 
 - what's a integral :
     * is a type trait that determines if a given type is an integral type. An integral type is a data type that represents a set of integers, such as char, short, int, long, long long, unsigned, and bool.
+
+
+
+
+/* ============================== links ============================== */
+
+- https://web.stanford.edu/class/cs107l/handouts/04-Custom-Iterators.pdf (i guess i need to read this pdf cuz have a lot of information , then i need to know what's a keyword friend and why we use them idk its importent this in vector )
+
+//TODO: - finished stack 
+        - read about keyword friend 
+        - start reading about avl * insertion
+                                  * searching
+                                  * deleting
+        
+        - implement pain and make pair

@@ -3,7 +3,91 @@
 #include <deque>
 #include <vector>
 #include <cstddef>
+#include <stack>
 #include "../vector/vector.hpp"
+#include "../../tools/enable_if.hpp"
+#include "../../tools/is_integral.hpp"
+namespace ft
+{
+   template <class T, class Container = std::deque<T> >
+    class stack
+    {
+        public :
+            typedef Container                               container_type;
+            typedef typename Container::value_type          value_type; 
+            typedef typename Container::size_type           size_type;
+            typedef typename Container::reference           reference;
+            typedef typename Container::const_reference     const_reference;
+        protected :
+            container_type _c;
+        
+        public :
+        /* ================================ constructor =============================== */
+            // stack(){}
+            // explicit stack (const container_type& ctnr = container_type())
+            // {
+            //     _c = ctnr;
+            // }
+            explicit stack (const container_type& ctnr = container_type()):_c(ctnr){}
+            // stack &operator=(const stack &x)
+            // {
+            //     _c = x._c;
+            //     return (*this);
+            // }
+            ~stack() {}
+        /* ================================ Element access =============================== */
+            
+            bool empty() const { return (_c.empty()); }//done
+
+            size_type size() const { return (_c.size()); } //done
+
+            value_type& top() { return (_c.back()); } //done
+
+            const value_type& top() const { return (_c.back()); } //done
+
+            void push (const value_type& val) { _c.push_back(val); } //done
+
+            void pop() { _c.pop_back(); }
+
+            void swap (stack& x)
+            {
+                container_type tmp = _c;
+                _c = x._c;
+                x._c = tmp;
+            }
+            
+            friend bool operator==(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
+            {
+                return lhs._c == rhs._c;
+            }
+            
+            friend bool operator!=(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
+            {
+                return lhs._c != rhs._c;
+            }
+
+            friend bool operator>(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
+            {
+                return lhs._c > rhs._c;
+            }
+
+            friend bool operator<(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
+            {
+                return lhs._c < rhs._c;
+            }
+
+            friend bool operator>=(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
+            {
+                return lhs._c >= rhs._c;
+            }
+
+            friend bool operator<=(const stack<T, Container> &lhs, const stack<T, Container> &rhs)
+            {
+                return lhs._c <= rhs._c;
+            }
+    };
+}
+#endif
 
 /*
     - Stacks are a type of container adaptor, specifically designed to operate in a LIFO context (last-in first-out),
@@ -19,48 +103,3 @@
         - push_back
         - pop_back
 */
-namespace ft
-{
-   template <class T, class Container = std::deque<T> >
-    class stack
-    {
-        public :
-            typedef Container                               container_type;
-            typedef typename Container::value_type          value_type   
-            typedef typename Container::size_type           size_type;
-            typedef typename Container::reference           reference;
-            typedef typename Container::const_reference     const_reference;
-        protected :
-            container_type _c;
-        
-        public :
-        /* ================================ constructor =============================== */
-            explicit stack (const container_type& ctnr = container_type()):_c(ctnr)
-            stack &operator=(const stack &x)
-            {
-                c = x.c;
-                return (*this);
-            }
-            ~stack() {}
-        /* ================================ Element access =============================== */
-            bool empty() const { return (c.empty()); }
-            size_type size() const { return (c.size()); }
-            value_type& top() { return (c.back()); }
-            const value_type& top() const { return (c.back()); }
-            void push (const value_type& val) { c.push_back(val); }
-            void pop() { c.pop_back(); }
-    };
-    template <class T, class Container>
-    bool operator== (const stack<T,Container>& lhs, const stack<T,Container>& rhs) { return lhs.c == rhs.c; }
-    template <class T, class Container>
-    bool operator!= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) { return lhs.c != rhs.c; }
-    template <class T, class Container>
-    bool operator<  (const stack<T,Container>& lhs, const stack<T,Container>& rhs) { return lhs.c < rhs.c; }
-    template <class T, class Container>
-    bool operator<= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) { return lhs.c <= rhs.c; }
-    template <class T, class Container>
-    bool operator>  (const stack<T,Container>& lhs, const stack<T,Container>& rhs) { return lhs.c > rhs.c; }
-    template <class T, class Container>
-    bool operator>= (const stack<T,Container>& lhs, const stack<T,Container>& rhs) { return lhs.c >= rhs.c; }
-}
-#endif
