@@ -68,6 +68,9 @@ When you create a vector, you can specify its initial size and capacity. If you 
 When you remove elements from the vector, it adjusts its size accordingly, but its capacity remains the same unless you explicitly reduce it.
 
 - the capacity of a vector represents the maximum number of elements it can store without having to reallocate memory and increase its capacity again. The size of a vector, on the other hand, represents the actual number of elements currently stored in the vector.
+
+# map:
+
 =================================================================================
                                             # Questions #
 
@@ -97,7 +100,6 @@ here are some differences between malloc and new :
 
 - what's a integral :
     * is a type trait that determines if a given type is an integral type. An integral type is a data type that represents a set of integers, such as char, short, int, long, long long, unsigned, and bool.
-
 
 
 

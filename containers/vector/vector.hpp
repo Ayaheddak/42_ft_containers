@@ -112,7 +112,7 @@ namespace ft
 			this->_size = range;
 			this->_capacity = range;
 			for (difference_type i = 0; i < range; i++, *first++)
-				this->_allocator.construct(&this->_array[i], *first);
+				this->_allocator.construct(&this->_array[i], *first);//TODO:warning expression result unused [-Wunused-value]
 		}
 		/*
 			Copy constructor: This creates a vector by copying the contents of another vector.
@@ -270,7 +270,8 @@ namespace ft
 				this->_capacity = n;
 				tmp = this->_allocator.allocate(this->_capacity);
 				for (size_type i = 0; i < this->_size; i++)
-					tmp[i] = this->_array[i];
+					this->_allocator.construct(&tmp[i], this->_array[i]);
+					// tmp[i] = this->_array[i];
 				this->_allocator.deallocate(this->_array, this->_size);
 				this->_array = tmp;
 			}
@@ -330,17 +331,17 @@ namespace ft
 			- If reallocation occurs, all iterators, including the past-the-end iterator, and all references to the elements are invalidated.
 			- Otherwise, no iterators or references are invalidated.
 		*/
-		void shrink_to_fit()
-		{
-			pointer tmp;
+		// void shrink_to_fit()
+		// {
+		// 	pointer tmp;
 
-			this->_capacity = this->_size;
-			tmp = this->_allocator.allocate(this->_capacity);
-			for (size_type i = 0; i < this->_size; i++)
-				tmp[i] = this->_array[i];
-			this->_allocator.deallocate(this->_array, this->_size);
-			this->_array = tmp;
-		}
+		// 	this->_capacity = this->_size;
+		// 	tmp = this->_allocator.allocate(this->_capacity);
+		// 	for (size_type i = 0; i < this->_size; i++)
+		// 		tmp[i] = this->_array[i];
+		// 	this->_allocator.deallocate(this->_array, this->_size);
+		// 	this->_array = tmp;
+		// }
 		/*
 			============================== element access ===================================
 		*/

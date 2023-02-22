@@ -23,17 +23,7 @@ namespace ft
         
         public :
         /* ================================ constructor =============================== */
-            // stack(){}
-            // explicit stack (const container_type& ctnr = container_type())
-            // {
-            //     _c = ctnr;
-            // }
             explicit stack (const container_type& ctnr = container_type()):_c(ctnr){}
-            // stack &operator=(const stack &x)
-            // {
-            //     _c = x._c;
-            //     return (*this);
-            // }
             ~stack() {}
         /* ================================ Element access =============================== */
             
