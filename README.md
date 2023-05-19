@@ -105,12 +105,4 @@ here are some differences between malloc and new :
 
 /* ============================== links ============================== */
 
-- https://web.stanford.edu/class/cs107l/handouts/04-Custom-Iterators.pdf (i guess i need to read this pdf cuz have a lot of information , then i need to know what's a keyword friend and why we use them idk its importent this in vector )
-
-//TODO: - finished stack 
-        - read about keyword friend 
-        - start reading about avl * insertion
-                                  * searching
-                                  * deleting
-        
-        - implement pain and make pair
+- https://web.stanford.edu/class/cs107l/handouts/04-Custom-Iterators.pdf
