@@ -331,17 +331,6 @@ namespace ft
 			- If reallocation occurs, all iterators, including the past-the-end iterator, and all references to the elements are invalidated.
 			- Otherwise, no iterators or references are invalidated.
 		*/
-		// void shrink_to_fit()
-		// {
-		// 	pointer tmp;
-
-		// 	this->_capacity = this->_size;
-		// 	tmp = this->_allocator.allocate(this->_capacity);
-		// 	for (size_type i = 0; i < this->_size; i++)
-		// 		tmp[i] = this->_array[i];
-		// 	this->_allocator.deallocate(this->_array, this->_size);
-		// 	this->_array = tmp;
-		// }
 		/*
 			============================== element access ===================================
 		*/
@@ -446,30 +435,6 @@ namespace ft
 			for (size_t i = 0; i < n; i++, first++)
 				this->_allocator.construct(&this->_array[i], *first);
 			this->_size = n;
-			// size_type i;
-			// size_type size;
-
-			// i = 0;
-			// size = 0;
-			// size = last-  first;
-			// if (size > this->_capacity)
-			// {
-			//     pointer tmp;
-
-			//     this->_capacity = size;
-			// 	tmp = this->_allocator.allocate(this->_capacity);
-			//     for (size_type i = 0; i < this->_size; i++)
-			// 		this->_allocator.construct(&tmp[i], this->_array[i]);
-			//     this->_allocator.deallocate(this->_array, this->_size);
-			//     this->_array = tmp;
-			// }
-			// while (i < size)
-			// {
-			//     this->_array[i] = *first;
-			//     first++;
-			//     i++;
-			// }
-			// this->_size = size;
 		}
 
 		void assign(size_type n, const value_type &val)
@@ -485,21 +450,6 @@ namespace ft
 			for (size_type i = 0; i < n; i++)
 				this->_allocator.construct(&this->_array[i], val);
 			this->_size = n;
-			// if (n > this->_capacity)
-			// {
-			//     pointer tmp;
-
-			//     this->_capacity = n;
-			//     tmp = this->_allocator.allocate(this->_capacity);
-			//     for (size_type i = 0; i < this->_size; i++)
-			// 		this->_allocator.construct(&tmp[i], this->_array[i]);
-			//         // tmp[i] = this->_array[i];
-			//     this->_allocator.deallocate(this->_array, this->_size);
-			//     this->_array = tmp;
-			// // }
-			// for (size_type i = 0; i < n; i++)
-			//     this->_array[i] = val;
-			// this->_size = n;
 		}
 		/*
 			- Adds a new element at the end of the vector, after its current last element.
